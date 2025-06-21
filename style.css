@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
+:root{
+
+    --p1_primary: #001f5d;
+
+    --p2_primary: #960000;
+
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Space Grotesk", Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+body{
+    background-color: #0d1117;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    height: 100vh;
+}
+
+.board{
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    
+    width: 39em;
+    height: 39em;
+
+    padding: 1em;
+
+    border-radius: 2em;
+
+    box-shadow: 0px 0px 5px rgb(167, 167, 167);
+
+}
+
+.board > * {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.tile{
+
+    width: 90%;
+    height: 90%;
+
+    box-shadow: 0px 0px 2px rgb(167, 167, 167);
+
+    border-radius: .5em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 2em;
+
+}
+
+.tile p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2em;
+    height: 2em;
+}
+
+.tile svg {
+    height: 2em;
+    width: 2em;
+    display: inline;
+}
+
+.p1:hover, .p2:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 2px rgb(77, 77, 77);
+
+}
+
+.p1 svg{
+    fill: var(--p1_primary);
+}
+
+.p2 svg{
+    fill: var(--p2_primary);
+}
