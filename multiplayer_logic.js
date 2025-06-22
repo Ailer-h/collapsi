@@ -1,22 +1,43 @@
 let scores = {"p1": 0, "p2": 0}
-let turn = 0
+let turn = 1
 
 var game_board = null
+
+class Tile{
+
+    constructor (x, y, value){
+        this.x = x
+        this.y = y
+        this.value = value
+    
+        this.collapsed = false
+
+    }
+
+    collapse(){
+        this.collapsed = true
+    }
+
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     
     game_board = read_board()
 
     document.getElementsByClassName("p1")[0].addEventListener("click", (e) => {
-        let cords = get_tile_element(e.target).id.split("-").slice(1,3)
-        
-        show_moves(cords)
+        if(turn % 2 != 0){
+            let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+            
+            show_moves(cords)
+        }
     })
     
     document.getElementsByClassName("p2")[0].addEventListener("click", (e) => {
-        let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+        if(turn % 2 == 0){
+            let cords = get_tile_element(e.target).id.split("-").slice(1,3)
         
-        show_moves(cords)
+            show_moves(cords)
+        }
     })
 
 })
@@ -33,11 +54,13 @@ let read_board = () => {
             tile_card = tile.classList[1]
         }
 
+        let tile_obj = new Tile(tile_cords[0], tile_cords[1], tile_card)
+
         if (!board_array[tile_cords[0]]){
             board_array[tile_cords[0]] = []
         }
 
-        board_array[tile_cords[0]].push(tile_card)
+        board_array[tile_cords[0]].push(tile_obj)
 
     })
 
@@ -50,18 +73,11 @@ let show_moves = (player_cords) => {
     let player = game_board[player_cords[0]][player_cords[1]]
     let tile = document.getElementById(`tile-${player_cords[0]}-${player_cords[1]}`)
 
-    if (player == "p1"){
-        document.getElementsByClassName("p2")[0].classList.remove("selected")
-    
-    }else{
-        document.getElementsByClassName("p1")[0].classList.remove("selected")
-    }
-
     //Highligths clicked tile    
     tile.classList.toggle("selected")
 
     if (turn == 0){
-    
+        
     }else {
 
     }
@@ -81,4 +97,21 @@ let get_tile_element = (element) => {
         
     }
 
+}
+
+let change_turn = () => {
+
+    turn++;
+
+    let elements = []
+
+    elements.push(document.getElementsByClassName("p1")[0])
+    elements.push(document.getElementsByClassName("p2")[0])
+    
+    elements = elements.concat(Array.from(document.getElementsByClassName("player-info")))
+
+    elements.forEach(element => {
+        element.classList.toggle("playing")
+    })
+    
 }

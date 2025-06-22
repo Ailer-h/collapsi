@@ -3,8 +3,10 @@
 :root{
 
     --p1_primary: hsl(225, 100%, 13%);
+    --p1_bright: hsl(225, 100%, 33%);
 
     --p2_primary: hsl(0, 100%, 29%);
+    --p2_bright: hsl(0, 100%, 49%);
 
 }
 
@@ -25,6 +27,7 @@ body{
 }
 
 #board{
+
     display: grid;
     grid-template-columns: repeat(4, 25%);
     
@@ -78,7 +81,15 @@ body{
     display: inline;
 }
 
-.p1:hover, .p2:hover {
+.p1.playing svg {
+    fill: var(--p1_bright);
+}
+
+.p2.playing svg {
+    fill: var(--p2_bright);
+}
+
+.playing.p1:hover, .playing.p2:hover {
     cursor: pointer;
     box-shadow: 0px 0px 2px hsl(0, 0%, 30%);
 
@@ -95,4 +106,52 @@ body{
 .selected {
     background-color: hsl(216, 56%, 7%);
     box-shadow: 0px 0px 2px hsl(0, 0%, 30%) inset;
+}
+
+#info_board {
+    position: fixed;
+
+    left: 1em;
+    top: 1em;
+
+    width: 15%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1em;
+
+}
+
+#info_board .player-info {
+
+    height: 2em;
+
+    box-shadow: 0px 0px 2px hsl(0, 0%, 65%);
+
+    display: flex;
+    align-items: center;
+
+    border-radius: .5em;
+
+}
+
+#info_board .player-info p {
+    margin-left: 1em;
+}
+
+.score-p1 {
+    background-color: var(--p1_primary);
+}
+
+.score-p1.playing {
+    background-color: var(--p1_bright);
+}
+
+.score-p2 {
+    background-color: var(--p2_primary);
+}
+
+.score-p2.playing {
+    background-color: var(--p2_bright);
 }
