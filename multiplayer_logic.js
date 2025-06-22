@@ -1,16 +1,22 @@
 let scores = {"p1": 0, "p2": 0}
-let turn = 1
+let turn = 0
+
+var game_board = null
 
 document.addEventListener("DOMContentLoaded", () => {
     
-    const game_board = read_board()
+    game_board = read_board()
 
-    document.getElementsByClassName("p1")[0].addEventListener("click", () => {
-        show_moves("p1")
+    document.getElementsByClassName("p1")[0].addEventListener("click", (e) => {
+        let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+        
+        show_moves(cords)
     })
     
-    document.getElementsByClassName("p2")[0].addEventListener("click", () => {
-        show_moves("p2")
+    document.getElementsByClassName("p2")[0].addEventListener("click", (e) => {
+        let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+        
+        show_moves(cords)
     })
 
 })
@@ -39,22 +45,34 @@ let read_board = () => {
 
 }
 
-let show_moves = (player) => {
+let show_moves = (player_cords) => {
 
-    let player_cords = search_2d_array(game_board, player)
+    let player = game_board[player_cords[0]][player_cords[1]]
 
-    alert("Cords: " + player_cords[0] + " : " + player_cords[1])
+    if (turn == 0){
+    
+    }else {
+
+    }
+
 }
 
-let search_2d_array = (array, element) => {
+let get_tile_element = (element) => {
 
-    let cords = []
+    let element_parent = null
 
-    console.log(array)
+    while (true){
 
-    cords.push(array.indexOf(row => row.includes(element)))
-    cords.push(array[cords[0]].indexOf(search))
+        if (!element_parent){
+            element_parent = element.parentElement
+        }
 
-    return cords
+        if (element_parent.classList.contains("p1") || element_parent.classList.contains("p2")){
+            return element_parent
+        }
+
+        element_parent = element_parent.parentElement
+        
+    }
 
 }
