@@ -24,12 +24,12 @@ body{
     height: 100vh;
 }
 
-.board{
+#board{
     display: grid;
     grid-template-columns: repeat(4, 25%);
     
-    width: 39em;
-    height: 39em;
+    height: 90%;
+    aspect-ratio: 1/1;
 
     padding: 1em;
 
@@ -90,4 +90,8 @@ body{
 
 .p2 svg{
     fill: var(--p2_primary);
+}
+
+.selected {
+    background-color: rgba(255, 255, 255, 0.132);
 }

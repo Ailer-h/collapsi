@@ -48,6 +48,11 @@ let read_board = () => {
 let show_moves = (player_cords) => {
 
     let player = game_board[player_cords[0]][player_cords[1]]
+    let tile = document.getElementById(`tile-${player_cords[0]}-${player_cords[1]}`)
+
+    //Highligths clicked tile
+    tile.classList.toggle("selected")
+    console.log(tile)
 
     if (turn == 0){
     
@@ -59,14 +64,9 @@ let show_moves = (player_cords) => {
 
 let get_tile_element = (element) => {
 
-    let element_parent = null
+    let element_parent = element
 
     while (true){
-
-        if (!element_parent){
-            element_parent = element.parentElement
-        }
-
         if (element_parent.classList.contains("p1") || element_parent.classList.contains("p2")){
             return element_parent
         }
