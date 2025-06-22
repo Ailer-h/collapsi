@@ -50,9 +50,13 @@ let show_moves = (player_cords) => {
     let player = game_board[player_cords[0]][player_cords[1]]
     let tile = document.getElementById(`tile-${player_cords[0]}-${player_cords[1]}`)
 
-    //Highligths clicked tile
+    //Clears selected items
+    Array.from(document.getElementsByClassName("selected")).forEach(item => {
+        item.classList.remove("selected")
+    })
+
+    //Highligths clicked tile    
     tile.classList.toggle("selected")
-    console.log(tile)
 
     if (turn == 0){
     
