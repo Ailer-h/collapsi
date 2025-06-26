@@ -8,6 +8,7 @@ class Tile{
     constructor (x, y, value){
         this.x = x
         this.y = y
+        this.tile = document.getElementById(`tile-${this.x}-${this.y}`)
         this.value = value
     
         this.collapsed = false
@@ -16,6 +17,8 @@ class Tile{
 
     collapse(){
         this.collapsed = true
+
+        this.tile.style.backgroundColor = "blue"
     }
 
 }
@@ -38,6 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
         
             show_moves(cords)
         }
+    })
+
+    Array.from(document.getElementsByClassName("tile")).forEach(tile => {
+
+        tile.addEventListener("click", (e) => {
+                let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+                if(!game_board[cords[0]][cords[1]].value.includes('p')){
+                    game_board[cords[0]][cords[1]].collapse()
+
+                }
+
+                
+        })
     })
 
 })
@@ -76,6 +92,8 @@ let show_moves = (player_cords) => {
     //Highligths clicked tile    
     tile.classList.toggle("selected")
 
+    find_all_destinations(1, player_cords)
+
     if (turn == 0){
         
     }else {
@@ -89,7 +107,7 @@ let get_tile_element = (element) => {
     let element_parent = element
 
     while (true){
-        if (element_parent.classList.contains("p1") || element_parent.classList.contains("p2")){
+        if (element_parent.classList.contains("tile")){
             return element_parent
         }
 
@@ -114,4 +132,51 @@ let change_turn = () => {
         element.classList.toggle("playing")
     })
     
+}
+
+let find_all_destinations = (moves, start_pos) => {
+
+    //Poisitve
+    for (let x = -moves; x <= moves; x++){
+        let max_y = Math.abs(moves) - x;
+        for (let y = -max_y; y <= max_y; y++){
+            let normalized = normalize_cords(
+                {
+                    x: x,
+                    y: y
+                }
+            )
+            
+            let tile = document.getElementById(`tile-${normalized.x}-${normalized.y}`)
+            
+            if(game_board[normalized.x][normalized.y].collapsed) continue
+
+            tile
+            .style.backgroundColor = "red"
+        }
+    }
+
+}
+
+let normalize_cords = (cords) => {
+    let board_size = game_board.length
+    
+    if (cords.x < 0){
+        cords.x = board_size + cords.x
+    }
+
+    if (cords.y < 0){
+        cords.y = board_size - cords.y
+    }
+    
+    if (cords.x >= board_size){
+        cords.x = cords.x % board_size
+    }
+
+    if (cords.y >= board_size){
+        cords.y = cords.y % board_size
+    }
+
+    return cords
+
 }
