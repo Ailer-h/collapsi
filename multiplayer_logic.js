@@ -1,31 +1,16 @@
-let scores = {"p1": 0, "p2": 0}
-let turn = 1
+var turn = 1
+var player_moving = false
 
 var game_board = null
 
-class Tile{
-
-    constructor (x, y, value){
-        this.x = x
-        this.y = y
-        this.tile = document.getElementById(`tile-${this.x}-${this.y}`)
-        this.value = value
-    
-        this.collapsed = false
-
-    }
-
-    collapse(){
-        this.collapsed = true
-
-        this.tile.style.backgroundColor = "blue"
-    }
-
-}
+var p1 = null
+var p2 = null
 
 document.addEventListener("DOMContentLoaded", () => {
     
     game_board = read_board()
+    p1 = new Player(get_player_cords("p1"), "p1")
+    p2 = new Player(get_player_cords("p2"), "p2")
 
     document.getElementsByClassName("p1")[0].addEventListener("click", (e) => {
         if(turn % 2 != 0){
@@ -47,12 +32,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tile.addEventListener("click", (e) => {
                 let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+                let tile = game_board[cords[0]][cords[1]]
 
-                if(!game_board[cords[0]][cords[1]].value.includes('p')){
-                    game_board[cords[0]][cords[1]].collapse()
-
+                if(!tile.value.includes('p') && !player_moving){
+                    tile.collapse()
                 }
 
+                if(player_moving) {
+                    
+                    if(turn % 2 != 0){
+                        p1.x = Number(cords[0])
+                        p1.y = Number(cords[1])
+
+                    }else {
+                        p2.x = Number(cords[0])
+                        p2.y = Number(cords[1])
+
+                    }
+
+
+                }
                 
         })
     })
@@ -92,10 +91,18 @@ let show_moves = (player_cords) => {
 
     //Highligths clicked tile    
     tile.classList.toggle("selected")
+    player_moving = !player_moving
+    
+    if(!player_moving){
+        clear_selections();
+        return
+    }
 
-    find_all_destinations(3, {"x": player_cords[0], "y": player_cords[1]})
-
-    if (turn == 0){
+    if (turn == 1){
+        find_all_destinations(1, {"x": player_cords[0], "y": player_cords[1]})
+        find_all_destinations(2, {"x": player_cords[0], "y": player_cords[1]})
+        find_all_destinations(3, {"x": player_cords[0], "y": player_cords[1]})
+        find_all_destinations(4, {"x": player_cords[0], "y": player_cords[1]})
         
     }else {
 
@@ -135,6 +142,15 @@ let change_turn = () => {
     
 }
 
+let clear_selections = () => {
+    let elements = Array.from(document.getElementsByClassName("valid-destination"))
+    
+    elements.forEach(element => {
+        element.classList.remove("valid-destination")
+    })
+
+}
+
 let find_all_destinations = (moves, start_pos) => {
 
     start_pos.x = Number(start_pos.x)
@@ -165,15 +181,16 @@ let find_all_destinations = (moves, start_pos) => {
         })
 
     }
-    console.log(destinations)
     
     destinations.forEach(destination => {
 
         let normalized = normalize_cords(destination)
+        let tile = game_board[normalized.x][normalized.y]
 
-        if(!game_board[normalized.x][normalized.y].collapsed){
+        if(!tile.collapsed && !tile.value.includes("p")){
             document.getElementById(`tile-${normalized.x}-${normalized.y}`)
-            .style.backgroundColor = "red"
+            .classList.add("valid-destination")
+            
         }
 
     })
@@ -201,5 +218,15 @@ let normalize_cords = (cords) => {
     }
 
     return cords
+
+}
+
+let get_player_cords = (player) => {
+    let cords = document.getElementsByClassName("p1")[0].id.split("-").slice(1,3)
+
+    return {
+        x: Number(cords[0]),
+        y: Number(cords[1])
+    }
 
 }
