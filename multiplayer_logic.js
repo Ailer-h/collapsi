@@ -29,31 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     Array.from(document.getElementsByClassName("tile")).forEach(tile => {
-
-        tile.addEventListener("click", (e) => {
-                let cords = get_tile_element(e.target).id.split("-").slice(1,3)
-                let tile = game_board[cords[0]][cords[1]]
-
-                if(!tile.value.includes('p') && !player_moving){
-                    tile.collapse()
-                }
-
-                if(player_moving) {
-                    
-                    if(turn % 2 != 0){
-                        p1.x = Number(cords[0])
-                        p1.y = Number(cords[1])
-
-                    }else {
-                        p2.x = Number(cords[0])
-                        p2.y = Number(cords[1])
-
-                    }
-
-
-                }
-                
-        })
+        tile.addEventListener("click", handle_tiles)
     })
 
 })
@@ -88,6 +64,7 @@ let show_moves = (player_cords) => {
 
     let player = game_board[player_cords[0]][player_cords[1]]
     let tile = document.getElementById(`tile-${player_cords[0]}-${player_cords[1]}`)
+    let player_position = {"x": player_cords[0], "y": player_cords[1]}
 
     //Highligths clicked tile    
     tile.classList.toggle("selected")
@@ -99,12 +76,14 @@ let show_moves = (player_cords) => {
     }
 
     if (turn == 1){
-        find_all_destinations(1, {"x": player_cords[0], "y": player_cords[1]})
-        find_all_destinations(2, {"x": player_cords[0], "y": player_cords[1]})
-        find_all_destinations(3, {"x": player_cords[0], "y": player_cords[1]})
-        find_all_destinations(4, {"x": player_cords[0], "y": player_cords[1]})
+        find_all_destinations(1, player_position)
+        find_all_destinations(2, player_position)
+        find_all_destinations(3, player_position)
+        find_all_destinations(4, player_position)
         
     }else {
+        let moves = tile.value
+        find_all_destinations(moves, player_position)
 
     }
 
@@ -151,7 +130,7 @@ let clear_selections = () => {
 
 }
 
-let find_all_destinations = (moves, start_pos) => {
+let get_valid_destinations = (moves, start_pos) => {
 
     start_pos.x = Number(start_pos.x)
     start_pos.y = Number(start_pos.y)
@@ -181,6 +160,19 @@ let find_all_destinations = (moves, start_pos) => {
         })
 
     }
+
+    return destinations
+
+}
+
+let find_all_destinations = (moves, start_pos) => {
+
+    let destinations = get_valid_destinations(moves, start_pos)
+    show_destinations(destinations)
+
+}
+
+let show_destinations = (destinations) => {
     
     destinations.forEach(destination => {
 
@@ -194,7 +186,6 @@ let find_all_destinations = (moves, start_pos) => {
         }
 
     })
-
 
 }
 
@@ -229,4 +220,30 @@ let get_player_cords = (player) => {
         y: Number(cords[1])
     }
 
+}
+
+let handle_tiles = (e) => {
+    let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+    let tile = game_board[cords[0]][cords[1]]
+
+    if(!tile.value.includes('p') && !player_moving){
+        tile.collapse()
+    }
+
+    if(!tile.value.includes('p') && player_moving) {
+        
+        if(turn % 2 != 0){
+            p1.x = Number(cords[0])
+            p1.y = Number(cords[1])
+
+        }else {
+            p2.x = Number(cords[0])
+            p2.y = Number(cords[1])
+
+        }
+
+        clear_selections()
+        change_turn()
+
+    }
 }
