@@ -2,11 +2,15 @@ const board_size = {"width": 4, "height": 4}
 const deck = {"1": 4, "2": 4, "3": 4, "4": 2}
 
 document.addEventListener("DOMContentLoaded", () => {
+    new_game();
+})
+
+let new_game = () => {
     const board = generate_board(board_size)
     load_board(board)
 
     document.getElementsByClassName("p1")[0].classList.add("playing")
-})
+}
 
 let load_board = (board) => {
     let board_elm = document.getElementById("board");

@@ -26,4 +26,9 @@ class Player{
 
         this.score = 0
     }
+
+    setCords(cords){
+        this.x = cords.x
+        this.y = cords.y
+    }
 }
