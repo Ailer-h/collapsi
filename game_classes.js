@@ -37,28 +37,26 @@ class Player {
 
     getValidDestinations(moves) {
         let destinations = []
+        let directions = [
+            { x: -1, y: 1 },
+            { x: 1, y: -1 },
+        ]
+
         for (let x = 0; x <= moves; x++) {
             let remaining_moves = moves - x
 
-            destinations.push({
-                x: this.x + x,
-                y: this.y + remaining_moves
+            directions.forEach(direction => {
+                let { x: dx, y: dy } = direction;
+
+                let new_pos = this.game.game_board.normalizeCords({
+                    x: this.x + (dx * x),
+                    y: this.y + (dy * remaining_moves)
+                })
+
+                destinations.push(new_pos)
+
             })
 
-            destinations.push({
-                x: this.x + x,
-                y: this.y - remaining_moves
-            })
-
-            destinations.push({
-                x: this.x - x,
-                y: this.y + remaining_moves
-            })
-
-            destinations.push({
-                x: this.x - x,
-                y: this.y - remaining_moves
-            })
         }
 
         return destinations
@@ -68,12 +66,11 @@ class Player {
     showDestinations(destinations) {
         if (this.game) {
             destinations.forEach(destination => {
-                let normalized = this.game.game_board.normalizeCords(destination)
-                let tile = this.game.game_board.board[normalized.x][normalized.y]
+                let tile = this.game.game_board.board[destination.x][destination.y]
 
                 if (!tile.collapsed && !tile.value.includes("p")) {
-                    document.getElementById(`tile-${normalized.x}-${normalized.y}`)
-                    .classList.add("valid-destination")
+                    document.getElementById(`tile-${destination.x}-${destination.y}`)
+                        .classList.add("valid-destination")
 
                 }
 
@@ -103,9 +100,9 @@ class Player {
 
         if (this.game.turn <= 2) {
             this.findAllDestinations(1)
-            // this.findAllDestinations(2)
-            // this.findAllDestinations(3)
-            // this.findAllDestinations(4)
+            this.findAllDestinations(2)
+            this.findAllDestinations(3)
+            this.findAllDestinations(4)
 
         } else {
             let moves = tile.value
@@ -149,7 +146,7 @@ class Board {
         }
 
         if (cords.y < 0) {
-            cords.y = board_size - cords.y
+            cords.y = board_size + cords.y
         }
 
         if (cords.x >= board_size) {
