@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tile.addEventListener("click", (e) => {
                 let cords = get_tile_element(e.target).id.split("-").slice(1,3)
+
                 if(!game_board[cords[0]][cords[1]].value.includes('p')){
                     game_board[cords[0]][cords[1]].collapse()
 
@@ -92,7 +93,7 @@ let show_moves = (player_cords) => {
     //Highligths clicked tile    
     tile.classList.toggle("selected")
 
-    find_all_destinations(1, player_cords)
+    find_all_destinations(3, {"x": player_cords[0], "y": player_cords[1]})
 
     if (turn == 0){
         
@@ -136,25 +137,47 @@ let change_turn = () => {
 
 let find_all_destinations = (moves, start_pos) => {
 
-    //Poisitve
-    for (let x = -moves; x <= moves; x++){
-        let max_y = Math.abs(moves) - x;
-        for (let y = -max_y; y <= max_y; y++){
-            let normalized = normalize_cords(
-                {
-                    x: x,
-                    y: y
-                }
-            )
-            
-            let tile = document.getElementById(`tile-${normalized.x}-${normalized.y}`)
-            
-            if(game_board[normalized.x][normalized.y].collapsed) continue
+    start_pos.x = Number(start_pos.x)
+    start_pos.y = Number(start_pos.y)
+    let destinations = []
 
-            tile
+    for (let x = 0; x <= moves; x++){
+        let remaining_moves = moves - x
+
+        destinations.push({
+            x: start_pos.x + x,
+            y: start_pos.y + remaining_moves
+        })
+        
+        destinations.push({
+            x: start_pos.x + x,
+            y: start_pos.y - remaining_moves
+        })
+        
+        destinations.push({
+            x: start_pos.x - x,
+            y: start_pos.y + remaining_moves
+        })
+        
+        destinations.push({
+            x: start_pos.x - x,
+            y: start_pos.y - remaining_moves
+        })
+
+    }
+    console.log(destinations)
+    
+    destinations.forEach(destination => {
+
+        let normalized = normalize_cords(destination)
+
+        if(!game_board[normalized.x][normalized.y].collapsed){
+            document.getElementById(`tile-${normalized.x}-${normalized.y}`)
             .style.backgroundColor = "red"
         }
-    }
+
+    })
+
 
 }
 
